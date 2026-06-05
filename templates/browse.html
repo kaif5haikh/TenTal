@@ -1,7 +1,83 @@
 {% extends "base.html" %} {% block content %}
 
-<div class="container mt-5">
-  <h1>Browse</h1>
+<div id="browse-page" class="container mt-5">
+  <h1 id="browse-title" class="mb-4">Browse Rentals</h1>
+
+  <div id="search-section" class="row mb-4">
+    <div class="col-md-8">
+      <input
+        id="search-input"
+        type="text"
+        class="form-control"
+        placeholder="Search tents, backpacks, cameras..."
+      />
+    </div>
+
+    <div class="col-md-4">
+      <button id="search-button" class="btn btn-primary w-100">Search</button>
+    </div>
+  </div>
+
+  <div id="filter-section" class="row mb-4">
+    <div class="col-md-4">
+      <select id="category-filter" class="form-select">
+        <option selected>All Categories</option>
+        <option>Camping Gear</option>
+        <option>Electronics</option>
+        <option>Accommodation</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="rental-listings" class="row g-4">
+    <div class="col-md-4">
+      <div class="card rental-card">
+        <img
+          src="https://placehold.co/600x400"
+          class="card-img-top rental-image"
+        />
+        <div class="card-body rental-card-body">
+          <h5 class="rental-title">Decathlon MH100 Tent</h5>
+          <p class="rental-price">₹300/day</p>
+          <a href="#" class="btn btn-primary rental-details-btn">
+            View Details
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card rental-card">
+        <img
+          src="https://placehold.co/600x400"
+          class="card-img-top rental-image"
+        />
+        <div class="card-body rental-card-body">
+          <h5 class="rental-title">Trekking Backpack</h5>
+          <p class="rental-price">₹300/day</p>
+          <a href="#" class="btn btn-primary rental-details-btn">
+            View Details
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card rental-card">
+        <img
+          src="https://placehold.co/600x400"
+          class="card-img-top rental-image"
+        />
+        <div class="card-body rental-card-body">
+          <h5 class="rental-title">Camping Stove</h5>
+          <p class="rental-price">₹300/day</p>
+          <a href="#" class="btn btn-primary rental-details-btn">
+            View Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

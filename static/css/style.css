@@ -1,0 +1,67 @@
+:root {
+    --primary-color: #2E8B57;
+    --secondary-color: #1E293B;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+   
+    display: flex;
+    flex-direction: column;
+}
+
+#footer-section {
+    margin-top: auto;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+#hero-section {
+    padding: 80px 0;
+}
+
+#categories-section .card {
+    transition: 0.3s;
+}
+
+#categories-section .card:hover {
+    transform: translateY(-5px);
+}
+
+
+.rental-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.rental-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.rental-image {
+    height: 220px;
+    object-fit: cover;
+}
+
+.rental-title {
+    font-weight: 600;
+}
+
+.rental-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: green;
+}
+
+.rental-details-btn {
+    width: 100%;
+}
