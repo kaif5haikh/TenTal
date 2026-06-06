@@ -21,10 +21,10 @@
         <a class="navbar-brand" href="#">Tental</a>
 
         <div class="navbar-nav ms-auto">
-          <a class="nav-link" href="{{ url_for('home') }}">Home</a>
-          <a class="nav-link" href="{{ url_for('browse') }}">Browse</a>
-          <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-          <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+          <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
+          <a class="nav-link" href="{{ url_for('main.browse') }}">Browse</a>
+          <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+          <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
         </div>
       </div>
     </nav>
