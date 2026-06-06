@@ -30,53 +30,21 @@
   </div>
 
   <div id="rental-listings" class="row g-4">
+    {% for rental in rentals %}
+
     <div class="col-md-4">
       <div class="card rental-card">
-        <img
-          src="https://placehold.co/600x400"
-          class="card-img-top rental-image"
-        />
-        <div class="card-body rental-card-body">
-          <h5 class="rental-title">Decathlon MH100 Tent</h5>
-          <p class="rental-price">₹300/day</p>
-          <a href="#" class="btn btn-primary rental-details-btn">
-            View Details
-          </a>
+        <div class="card-body">
+          <h5 class="rental-title">{{ rental.title }}</h5>
+
+          <p class="rental-price">₹{{ rental.price_per_day }}/day</p>
+
+          <p>{{ rental.category }}</p>
         </div>
       </div>
     </div>
 
-    <div class="col-md-4">
-      <div class="card rental-card">
-        <img
-          src="https://placehold.co/600x400"
-          class="card-img-top rental-image"
-        />
-        <div class="card-body rental-card-body">
-          <h5 class="rental-title">Trekking Backpack</h5>
-          <p class="rental-price">₹300/day</p>
-          <a href="#" class="btn btn-primary rental-details-btn">
-            View Details
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card rental-card">
-        <img
-          src="https://placehold.co/600x400"
-          class="card-img-top rental-image"
-        />
-        <div class="card-body rental-card-body">
-          <h5 class="rental-title">Camping Stove</h5>
-          <p class="rental-price">₹300/day</p>
-          <a href="#" class="btn btn-primary rental-details-btn">
-            View Details
-          </a>
-        </div>
-      </div>
-    </div>
+    {% endfor %}
   </div>
 </div>
 

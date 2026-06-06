@@ -5,7 +5,6 @@ from flask import (
     redirect,
     url_for
 )
-
 from werkzeug.security import (
     generate_password_hash,
     check_password_hash
@@ -13,6 +12,8 @@ from werkzeug.security import (
 
 from models.user import User
 from extensions import db
+from flask_login import login_user
+from flask_login import logout_user
 
 auth = Blueprint("auth", __name__)
 
@@ -29,7 +30,8 @@ def login():
         ).first()
 
         if user and check_password_hash(user.password,password):
-            return "Login Successfull"
+            login_user(user)
+            return redirect(url_for("main.home"))
 
         return "Invalid Email or Password"
 
@@ -64,3 +66,10 @@ def register():
         return redirect(url_for("auth.login"))
 
     return render_template("register.html")
+
+@auth.route("/logout")
+def logout():
+
+    logout_user()
+
+    return redirect(url_for("main.home"))

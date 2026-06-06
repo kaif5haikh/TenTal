@@ -22,9 +22,24 @@
 
         <div class="navbar-nav ms-auto">
           <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
+
           <a class="nav-link" href="{{ url_for('main.browse') }}">Browse</a>
-          <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
-          <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+
+          {% if current_user.is_authenticated %}
+
+          <span class="nav-link"> {{ current_user.name }} </span>
+
+          <a class="nav-link" href="{{ url_for('auth.logout') }}"> Logout </a>
+
+          {% else %}
+
+          <a class="nav-link" href="{{ url_for('auth.login') }}"> Login </a>
+
+          <a class="nav-link" href="{{ url_for('auth.register') }}">
+            Register
+          </a>
+
+          {% endif %}
         </div>
       </div>
     </nav>

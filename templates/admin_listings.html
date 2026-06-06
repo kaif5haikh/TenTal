@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-5">
+  <h1>Pending Listings</h1>
+
+  {% for rental in rentals %}
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <h4>{{ rental.title }}</h4>
+
+      <p>{{ rental.description }}</p>
+
+      <p>₹{{ rental.price_per_day }}/day</p>
+
+      <p>{{ rental.category }}</p>
+      <a
+        href="{{ url_for('main.approve_listing', id=rental.id) }}"
+        class="btn btn-success"
+      >
+        Approve
+      </a>
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+
+{% endblock %}

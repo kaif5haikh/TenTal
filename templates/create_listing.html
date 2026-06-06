@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h1>Create Listing</h1>
+
+      <form method="POST">
+        <div class="mb-3">
+          <label>Title</label>
+          <input type="text" name="title" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+          <label>Description</label>
+          <textarea name="description" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label>Price Per Day</label>
+          <input type="number" name="price" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+          <label>Category</label>
+          <input type="text" name="category" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Listing</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

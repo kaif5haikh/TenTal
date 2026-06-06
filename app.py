@@ -1,7 +1,10 @@
 from flask import Flask
 from dotenv import load_dotenv
 import os
+
 from models.user import User
+from models.rental_item import RentalItem
+
 from extensions import db, login_manager
 from routes.main import main
 from routes.auth import auth
@@ -22,7 +25,7 @@ db.init_app(app)
 
 # Initialize Flask-Login for user session management
 login_manager.init_app(app)
-login_manager.login_view = "login"
+login_manager.login_view = "auth.login"
 
 
 # Initialize Flask-Login for user session management

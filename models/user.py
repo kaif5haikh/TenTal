@@ -25,6 +25,12 @@ class User(UserMixin, db.Model):
         db.String(255),
         nullable=False
     )
+    # One user can own multiple rental listings
+    rentals = db.relationship(
+        "RentalItem",
+        backref="owner",
+        lazy=True
+    )
 
 @login_manager.user_loader
 def load_user(user_id):

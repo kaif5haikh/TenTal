@@ -4,7 +4,9 @@
 <div id="hero-section" class="container mt-5 text-center">
   <h1 class="display-2 fw-bold">Tental</h1>
 
-  <p class="lead">Rent Anything, Anytime</p>
+  {% if current_user.is_authenticated %}
+  <p class="lead">Welcome back, {{ current_user.name }}</p>
+  {% endif %}
 
   <a href="#" class="btn btn-primary btn-lg"> Explore Rentals </a>
 
