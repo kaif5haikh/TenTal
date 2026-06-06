@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-5">
+  <h1>Edit Listing</h1>
+
+  <form method="POST">
+    <div class="mb-3">
+      <label>Title</label>
+      <input
+        type="text"
+        name="title"
+        class="form-control"
+        value="{{ rental.title }}"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label>Description</label>
+      <textarea name="description" class="form-control">
+{{ rental.description }}</textarea
+      >
+    </div>
+
+    <div class="mb-3">
+      <label>Price Per Day</label>
+      <input
+        type="number"
+        name="price"
+        class="form-control"
+        value="{{ rental.price_per_day }}"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label>Category</label>
+      <input
+        type="text"
+        name="category"
+        class="form-control"
+        value="{{ rental.category }}"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Listing</button>
+  </form>
+</div>
+
+{% endblock %}

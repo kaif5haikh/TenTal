@@ -29,6 +29,9 @@
 
           <span class="nav-link"> {{ current_user.name }} </span>
 
+          <a class="nav-link" href="{{ url_for('main.my_listings') }}">
+            My Listings
+          </a>
           <a class="nav-link" href="{{ url_for('auth.logout') }}"> Logout </a>
 
           {% else %}

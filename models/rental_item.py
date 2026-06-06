@@ -22,3 +22,7 @@ class RentalItem(db.Model):
         db.String(20),
         default="pending"
     )
+
+    image = db.Column(
+        db.String(255)
+    )

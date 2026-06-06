@@ -34,8 +34,20 @@
 
     <div class="col-md-4">
       <div class="card rental-card">
+        {% if rental.image %}
+
+        <img
+          src="{{ url_for('static', filename='uploads/' + rental.image) }}"
+          class="card-img-top"
+          alt="{{ rental.title }}"
+          style="height: 200px; object-fit: cover"
+        />
+
+        {% endif %}
         <div class="card-body">
-          <h5 class="rental-title">{{ rental.title }}</h5>
+          <a href="{{ url_for('main.listing_detail', id=rental.id) }}">
+            <h5 class="rental-title">{{ rental.title }}</h5>
+          </a>
 
           <p class="rental-price">₹{{ rental.price_per_day }}/day</p>
 

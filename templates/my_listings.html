@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
 
 <div class="container mt-5">
-  <h1>Pending Listings</h1>
+  <h1>My Listings</h1>
 
   {% for rental in rentals %}
 
@@ -13,21 +13,18 @@
 
       <p>₹{{ rental.price_per_day }}/day</p>
 
-      <p>{{ rental.category }}</p>
-      <p><strong>Owner:</strong> {{ rental.owner.name }}</p>
-
-      <p><strong>Email:</strong> {{ rental.owner.email }}</p>
+      <p>Status: {{ rental.status }}</p>
       <a
-        href="{{ url_for('main.approve_listing', id=rental.id) }}"
-        class="btn btn-success"
+        href="{{ url_for('main.edit_listing', id=rental.id) }}"
+        class="btn btn-warning"
       >
-        Approve
+        Edit
       </a>
       <a
-        href="{{ url_for('main.reject_listing', id=rental.id) }}"
+        href="{{ url_for('main.delete_listing', id=rental.id) }}"
         class="btn btn-danger"
       >
-        Reject
+        Delete
       </a>
     </div>
   </div>
