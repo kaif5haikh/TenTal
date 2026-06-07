@@ -21,9 +21,11 @@ def home():
 @main.route("/browse")
 def browse():
 
-    rentals = RentalItem.query.filter_by(
-        status="approved"
-    ).all()
+    rentals = RentalItem.query.filter(
+        RentalItem.status == "approved",
+        RentalItem.owner.has(
+            is_active_user=True
+    )).all()
 
     return render_template(
         "browse.html",
@@ -168,7 +170,7 @@ def user_listings(id):
         user=user
     )
 
-# Enable and disable account of users using admin.
+# Enable and disable account of users using
 @main.route("/admin/disable-user/<int:id>")
 @login_required
 def disable_user(id):
