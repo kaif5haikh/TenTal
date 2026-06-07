@@ -7,6 +7,7 @@ from flask_login import login_required
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app
+from models.user import User
 
 
 main = Blueprint("main", __name__)
@@ -99,6 +100,107 @@ def admin_listings():
     return render_template(
         "admin_listings.html",
         rentals=rentals
+    )
+
+@main.route("/admin/dashboard")
+@login_required
+def admin_dashboard():
+
+    if not current_user.is_admin:
+        return "Access Denied"
+
+    total_users = User.query.count()
+
+    total_listings = RentalItem.query.count()
+
+    pending_listings = RentalItem.query.filter_by(
+        status="pending"
+    ).count()
+
+    approved_listings = RentalItem.query.filter_by(
+        status="approved"
+    ).count()
+
+    rejected_listings = RentalItem.query.filter_by(
+        status="rejected"
+    ).count()
+
+    recent_listings = RentalItem.query.order_by(
+        RentalItem.id.desc()
+    ).limit(5).all()
+
+    return render_template(
+        "admin_dashboard.html",
+        total_users=total_users,
+        total_listings=total_listings,
+        pending_listings=pending_listings,
+        approved_listings=approved_listings,
+        rejected_listings=rejected_listings,
+        recent_listings=recent_listings
+    )
+
+@main.route("/admin/users")
+@login_required
+def admin_users():
+
+    if not current_user.is_admin:
+        return "Access Denied"
+
+    users = User.query.all()
+
+    return render_template(
+        "admin_users.html",
+        users=users
+    )
+
+# check listing of users in usermanagement page
+@main.route("/admin/user/<int:id>")
+@login_required
+def user_listings(id):
+
+    if not current_user.is_admin:
+        return "Access Denied"
+
+    user = User.query.get_or_404(id)
+
+    return render_template(
+        "user_listings.html",
+        user=user
+    )
+
+# Enable and disable account of users using admin.
+@main.route("/admin/disable-user/<int:id>")
+@login_required
+def disable_user(id):
+
+    if not current_user.is_admin:
+        return "Access Denied"
+
+    user = User.query.get_or_404(id)
+
+    user.is_active_user = False
+
+    db.session.commit()
+
+    return redirect(
+        url_for("main.admin_users")
+    )
+
+@main.route("/admin/enable-user/<int:id>")
+@login_required
+def enable_user(id):
+
+    if not current_user.is_admin:
+        return "Access Denied"
+
+    user = User.query.get_or_404(id)
+
+    user.is_active_user = True
+
+    db.session.commit()
+
+    return redirect(
+        url_for("main.admin_users")
     )
 
 @main.route("/approve/<int:id>")

@@ -30,6 +30,8 @@ def login():
         ).first()
 
         if user and check_password_hash(user.password,password):
+            if not user.is_active_user:
+                return "Account Disabled"
             login_user(user)
             return redirect(url_for("main.home"))
 

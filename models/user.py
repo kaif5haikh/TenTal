@@ -36,6 +36,10 @@ class User(UserMixin, db.Model):
         db.Boolean,
         default=False
     )
+    is_active_user = db.Column(
+        db.Boolean,
+        default=True
+    )
 
 @login_manager.user_loader
 def load_user(user_id):

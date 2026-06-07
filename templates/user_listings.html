@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-5">
+  <h1>{{ user.name }} Listings</h1>
+
+  {% for rental in user.rentals %}
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <h4>{{ rental.title }}</h4>
+
+      <p>{{ rental.description }}</p>
+
+      <p>Status: {{ rental.status }}</p>
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+
+{% endblock %}

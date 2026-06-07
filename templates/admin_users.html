@@ -1,0 +1,66 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-5">
+  <h1>User Management</h1>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Admin</th>
+        <th>Listings</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for user in users %}
+
+      <tr>
+        <td>{{ user.name }}</td>
+
+        <td>{{ user.email }}</td>
+        <td>
+          {% if user.is_active_user %} Active {% else %} Disabled {% endif %}
+        </td>
+
+        <td>{% if user.is_admin %} Yes {% else %} No {% endif %}</td>
+
+        <td>{{ user.rentals|length }}</td>
+        <td>
+          <a
+            href="{{ url_for('main.user_listings', id=user.id) }}"
+            class="btn btn-primary btn-sm"
+          >
+            View Listings
+          </a>
+          {% if user.is_active_user %}
+
+          <a
+            href="{{ url_for('main.disable_user', id=user.id) }}"
+            class="btn btn-danger btn-sm"
+          >
+            Disable
+          </a>
+
+          {% else %}
+
+          <a
+            href="{{ url_for('main.enable_user', id=user.id) }}"
+            class="btn btn-success btn-sm"
+          >
+            Enable
+          </a>
+
+          {% endif %}
+        </td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
