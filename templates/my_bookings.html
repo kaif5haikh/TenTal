@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-5">
+  <h1>My Bookings</h1>
+
+  {% for booking in bookings %}
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <h4>{{ booking.rental_item.title }}</h4>
+
+      <p>{{ booking.start_date }} → {{ booking.end_date }}</p>
+
+      <p>Quantity: {{ booking.quantity_booked }}</p>
+
+      <p>₹{{ booking.total_price }}</p>
+      <p>Security Deposit: ₹{{ booking.security_deposit }}</p>
+
+      <p>
+        <strong>
+          Total Paid: ₹{{ booking.total_price + booking.security_deposit }}
+        </strong>
+      </p>
+
+      <p>
+        Status:
+        <span class="badge bg-warning"> {{ booking.status }} </span>
+      </p>
+
+      <p>Requested: {{ booking.created_at.strftime('%d-%m-%Y %I:%M %p') }}</p>
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+
+{% endblock %}

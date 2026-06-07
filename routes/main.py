@@ -8,6 +8,9 @@ import os
 from werkzeug.utils import secure_filename
 from flask import current_app
 from models.user import User
+from models.booking import Booking
+from datetime import datetime,date
+from flask import flash
 
 
 main = Blueprint("main", __name__)
@@ -21,26 +24,32 @@ def home():
 @main.route("/browse")
 def browse():
 
-    rentals = RentalItem.query.filter(
-        RentalItem.status == "approved",
-        RentalItem.owner.has(
-            is_active_user=True
-    )).all()
+    rentals = RentalItem.query.filter_by(
+        status="approved"
+    ).all()
+
+    rentals = [
+        rental for rental in rentals
+        if rental.owner.is_active_user
+    ]
 
     return render_template(
         "browse.html",
         rentals=rentals
     )
 
+
+
 @main.route("/listing/<int:id>")
 def listing_detail(id):
 
     rental = RentalItem.query.get_or_404(id)
 
+
     return render_template(
         "listing_detail.html",
         rental=rental
-    )
+    )   
 
 @main.route("/create-listing", methods=["GET", "POST"])
 @login_required
@@ -53,6 +62,10 @@ def create_listing():
         price = request.form.get("price")
         category = request.form.get("category")
         image = request.files.get("image")
+        quantity = int(request.form["quantity"])
+        security_deposit = float(
+            request.form["security_deposit"]
+        )
 
         filename = None
 
@@ -74,6 +87,8 @@ def create_listing():
             description=description,
             price_per_day=price,
             category=category,
+            quantity=quantity,
+            security_deposit=security_deposit,
             image=filename,
             user_id=current_user.id,
             status="pending",
@@ -221,6 +236,103 @@ def approve_listing(id):
         url_for("main.admin_listings")
     )
 
+@main.route(
+    "/booking/request/<int:id>",
+    methods=["POST"]
+)
+@login_required
+def request_booking(id):
+
+    rental = RentalItem.query.get_or_404(id)
+    quantity_booked = int(
+        request.form["quantity_booked"]
+    )
+    if rental.user_id == current_user.id:
+        return "You cannot book your own listing"
+    
+    if quantity_booked > rental.quantity:
+        return "Requested quantity exceeds total stock"
+    
+    if quantity_booked < 1:
+        return "Invalid quantity"
+
+    start_date = datetime.strptime(
+        request.form.get("start_date"),
+        "%Y-%m-%d"
+    ).date()
+
+    end_date = datetime.strptime(
+        request.form.get("end_date"),
+        "%Y-%m-%d"
+    ).date()
+
+    if start_date < date.today():
+        return "Cannot book past dates"
+
+    if end_date <= start_date:
+        return "End date must be after start date"
+
+    days = (end_date - start_date).days
+
+    total_price = (
+        days *
+        rental.price_per_day *
+        quantity_booked
+    )
+    grand_total = (
+        total_price +
+        rental.security_deposit
+    )
+    booked_quantity = 0
+
+    for booking in rental.bookings:
+        if booking.status != "approved":
+            continue
+        overlap = (
+            start_date < booking.end_date
+            and
+            end_date > booking.start_date
+            )
+        if overlap:
+            booked_quantity += booking.quantity_booked
+
+    available_quantity = (
+        rental.quantity -
+        booked_quantity
+        )
+    
+    available_quantity = max(
+        0,
+        available_quantity
+    )
+    
+    if quantity_booked > available_quantity:
+        return f"Only {available_quantity} item(s) available for selected dates"
+
+    booking = Booking(
+        user_id=current_user.id,
+        rental_item_id=rental.id,
+        start_date=start_date,
+        end_date=end_date,
+        total_price=total_price,
+        security_deposit=rental.security_deposit,
+        quantity_booked=quantity_booked,
+        status="approved"
+    )
+
+    db.session.add(booking)
+    db.session.commit()
+    flash(
+        "Booking confirmed successfully!",
+        "success"
+    )
+    return redirect(
+        url_for(
+            "main.listing_detail",
+            id=rental.id
+        )
+    )
+
 @main.route("/reject-listing/<int:id>")
 @login_required
 def reject_listing(id):
@@ -299,4 +411,32 @@ def edit_listing(id):
     return render_template(
         "edit_listing.html",
         rental=rental
+    )
+
+@main.route("/my-bookings")
+@login_required
+def my_bookings():
+
+    bookings = Booking.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    return render_template(
+        "my_bookings.html",
+        bookings=bookings
+    )
+
+@main.route("/booking-requests")
+@login_required
+def booking_requests():
+
+    bookings = Booking.query.join(
+        Booking.rental_item
+    ).filter(
+        RentalItem.user_id == current_user.id
+    ).all()
+
+    return render_template(
+        "booking_requests.html",
+        bookings=bookings
     )

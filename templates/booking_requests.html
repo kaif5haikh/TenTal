@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-5">
+  <h1>Booking Requests</h1>
+
+  {% for booking in bookings %}
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <h4>{{ booking.rental_item.title }}</h4>
+
+      <p>Requested By: {{ booking.user.name }}</p>
+
+      <p>{{ booking.start_date }} → {{ booking.end_date }}</p>
+
+      <p>₹{{ booking.total_price }}</p>
+
+      <p>Quantity: {{ booking.quantity_booked }}</p>
+
+      <p>Security Deposit: ₹{{ booking.security_deposit }}</p>
+
+      <p>Total Amount: ₹{{ booking.total_price + booking.security_deposit }}</p>
+
+      <p>Status: {{ booking.status }}</p>
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+
+{% endblock %}

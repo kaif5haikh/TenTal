@@ -14,9 +14,11 @@
       <p>₹{{ rental.price_per_day }}/day</p>
 
       <p>{{ rental.category }}</p>
+      <p><strong>Quantity:</strong> {{ rental.quantity }}</p>
       <p><strong>Owner:</strong> {{ rental.owner.name }}</p>
 
       <p><strong>Email:</strong> {{ rental.owner.email }}</p>
+
       <a
         href="{{ url_for('main.approve_listing', id=rental.id) }}"
         class="btn btn-success"

@@ -8,6 +8,7 @@ from models.rental_item import RentalItem
 from extensions import db, login_manager
 from routes.main import main
 from routes.auth import auth
+from models.booking import Booking
 
 # Load environment variables from .env file
 load_dotenv()

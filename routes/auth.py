@@ -21,20 +21,16 @@ auth = Blueprint("auth", __name__)
 def login():
 
     if request.method == "POST":
-
         email = request.form.get("email")
         password = request.form.get("password")
-
-        user = User.query.filter_by(
-            email=email
-        ).first()
+        user = User.query.filter_by(email=email).first()
 
         if user and check_password_hash(user.password,password):
             if not user.is_active_user:
                 return "Account Disabled"
             login_user(user)
+            
             return redirect(url_for("main.home"))
-
         return "Invalid Email or Password"
 
     return render_template("login.html")

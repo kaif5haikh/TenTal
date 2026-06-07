@@ -26,3 +26,19 @@ class RentalItem(db.Model):
     image = db.Column(
         db.String(255)
     )
+    bookings = db.relationship(
+        "Booking",
+        backref="rental_item",
+        lazy=True
+    )
+
+    quantity = db.Column(
+        db.Integer,
+        nullable=False,
+        default=1
+    )
+    security_deposit = db.Column(
+        db.Float,
+        nullable=False,
+        default=0
+    )

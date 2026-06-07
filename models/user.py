@@ -41,6 +41,12 @@ class User(UserMixin, db.Model):
         default=True
     )
 
+    bookings = db.relationship(
+        "Booking",
+        backref="user",
+        lazy=True
+    )
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
