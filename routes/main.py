@@ -26,6 +26,18 @@ def dates_overlap(
         end_date >= booking_start
     )
 
+def update_booking_status(booking):
+
+    today = date.today()
+
+    if booking.status == "cancelled":
+        return
+
+    if booking.start_date <= today <= booking.end_date:
+        booking.status = "active"
+
+    elif today > booking.end_date:
+        booking.status = "completed"
 
 main = Blueprint("main", __name__)
 
@@ -444,6 +456,13 @@ def my_bookings():
         user_id=current_user.id
     ).all()
 
+    for booking in bookings:
+        update_booking_status(
+            booking
+        )
+
+    db.session.commit()
+
     return render_template(
         "my_bookings.html",
         bookings=bookings
@@ -458,6 +477,8 @@ def booking_requests():
     ).filter(
         RentalItem.user_id == current_user.id
     ).all()
+
+    
 
     return render_template(
         "booking_requests.html",
