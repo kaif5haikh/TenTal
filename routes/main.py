@@ -561,3 +561,37 @@ def check_availability(id):
     return str(
         max(0, available_quantity)
     )
+
+# Owner can check its listing and revnues:
+@main.route("/owner-dashboard")
+@login_required
+def owner_dashboard():
+
+    listings = RentalItem.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    total_listings = len(listings)
+
+    active_rentals = 0
+    completed_rentals = 0
+    total_revenue = 0
+
+    for listing in listings:
+
+        for booking in listing.bookings:
+
+            if booking.status == "active":
+                active_rentals += 1
+
+            if booking.status == "completed":
+                completed_rentals += 1
+                total_revenue += booking.total_price
+
+    return render_template(
+        "owner_dashboard.html",
+        total_listings=total_listings,
+        active_rentals=active_rentals,
+        completed_rentals=completed_rentals,
+        total_revenue=total_revenue
+    )
