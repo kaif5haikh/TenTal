@@ -38,17 +38,24 @@
       {% if current_user.is_authenticated %}
       <p>{{ rental.owner.email }}</p>
       {% endif %}
-
       <hr />
+
       <h5>Total Quantity</h5>
       <p>{{ rental.quantity }}</p>
+
+      <div class="alert alert-warning">
+        <strong>Note:</strong>
+        A 1-day maintenance and inspection buffer is applied between bookings.
+        Items become available one day after the previous rental ends.
+      </div>
+
       <h5>Book This Item</h5>
 
       <form
         method="POST"
         action="{{ url_for('main.request_booking', id=rental.id) }}"
       >
-        <label>Quantity Needed</label>
+        <label class="form-label"> Quantity Needed </label>
 
         <input
           type="number"
@@ -59,6 +66,7 @@
           value="1"
           required
         />
+        <label class="form-label"> Start Date </label>
         <input
           type="date"
           name="start_date"
@@ -66,7 +74,7 @@
           min="{{ today }}"
           required
         />
-
+        <label class="form-label"> End Date </label>
         <input
           type="date"
           name="end_date"
@@ -75,10 +83,52 @@
           required
         />
 
+        <button
+          type="button"
+          class="btn btn-secondary mb-2"
+          onclick="checkAvailability()"
+        >
+          Check Availability
+        </button>
+
+        <div id="availability-result"></div>
+
+        <small class="text-muted">
+          Availability includes a 1-day maintenance buffer between rentals.
+        </small>
+
+        <br /><br />
+
         <button type="submit" class="btn btn-primary">Request Booking</button>
       </form>
     </div>
   </div>
 </div>
+<script>
+  function checkAvailability() {
+    const startDate = document.querySelector('[name="start_date"]').value;
+
+    const endDate = document.querySelector('[name="end_date"]').value;
+    if (!startDate || !endDate) {
+      document.getElementById("availability-result").innerHTML =
+        `<div class="alert alert-warning">
+            Please select both dates first.
+        </div>`;
+
+      return;
+    }
+
+    fetch(
+      `/check-availability/{{ rental.id }}?start_date=${startDate}&end_date=${endDate}`,
+    )
+      .then((response) => response.text())
+      .then((data) => {
+        document.getElementById("availability-result").innerHTML =
+          `<div class="alert alert-info">
+                Available Quantity: ${data}
+            </div>`;
+      });
+  }
+</script>
 
 {% endblock %}

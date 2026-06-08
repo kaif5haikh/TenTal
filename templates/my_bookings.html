@@ -27,6 +27,17 @@
         <span class="badge bg-warning"> {{ booking.status }} </span>
       </p>
 
+      {% if booking.status == "approved" %}
+
+      <a
+        href="{{ url_for('main.cancel_booking', id=booking.id) }}"
+        class="btn btn-danger btn-sm"
+      >
+        Cancel Booking
+      </a>
+
+      {% endif %}
+
       <p>Requested: {{ booking.created_at.strftime('%d-%m-%Y %I:%M %p') }}</p>
     </div>
   </div>

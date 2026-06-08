@@ -9,8 +9,22 @@ from werkzeug.utils import secure_filename
 from flask import current_app
 from models.user import User
 from models.booking import Booking
-from datetime import datetime,date
+from datetime import datetime, date, timedelta
 from flask import flash
+
+
+BUFFER_DAYS = 1
+def dates_overlap(
+    start_date,
+    end_date,
+    booking_start,
+    booking_end
+):
+    return (
+        start_date <= booking_end + timedelta(days=BUFFER_DAYS)
+        and
+        end_date >= booking_start
+    )
 
 
 main = Blueprint("main", __name__)
@@ -288,11 +302,20 @@ def request_booking(id):
     for booking in rental.bookings:
         if booking.status != "approved":
             continue
-        overlap = (
-            start_date < booking.end_date
-            and
-            end_date > booking.start_date
-            )
+        overlap = dates_overlap(
+            start_date,
+            end_date,
+            booking.start_date,
+            booking.end_date
+        )
+        print(
+            "Booking:",
+            booking.start_date,
+            booking.end_date,
+            "Overlap:",
+            overlap
+        )
+        
         if overlap:
             booked_quantity += booking.quantity_booked
 
@@ -439,4 +462,81 @@ def booking_requests():
     return render_template(
         "booking_requests.html",
         bookings=bookings
+    )
+
+
+@main.route("/booking/cancel/<int:id>")
+@login_required
+def cancel_booking(id):
+
+    booking = Booking.query.get_or_404(id)
+
+    if booking.user_id != current_user.id:
+        return "Access Denied"
+
+    booking.status = "cancelled"
+
+    db.session.commit()
+
+    return redirect(
+        url_for("main.my_bookings")
+    )
+
+@main.route("/check-availability/<int:id>")
+@login_required
+def check_availability(id):
+
+    rental = RentalItem.query.get_or_404(id)
+    start_date_str = request.args.get(
+    "start_date"
+)
+
+    end_date_str = request.args.get(
+        "end_date"
+    )
+
+    if not start_date_str or not end_date_str:
+        return "Select dates first"
+
+    start_date = datetime.strptime(
+        request.args.get("start_date"),
+        "%Y-%m-%d"
+    ).date()
+
+    end_date = datetime.strptime(
+        request.args.get("end_date"),
+        "%Y-%m-%d"
+    ).date()
+
+    booked_quantity = 0
+
+    for booking in rental.bookings:
+
+        if booking.status != "approved":
+            continue
+
+        overlap = dates_overlap(
+            start_date,
+            end_date,
+            booking.start_date,
+            booking.end_date
+        )
+        print(
+            "Booking:",
+            booking.start_date,
+            booking.end_date,
+            "Overlap:",
+            overlap
+        )
+
+        if overlap:
+            booked_quantity += booking.quantity_booked
+
+    available_quantity = (
+        rental.quantity -
+        booked_quantity
+    )
+
+    return str(
+        max(0, available_quantity)
     )
