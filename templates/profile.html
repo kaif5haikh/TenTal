@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-5">
+  <h1>My Profile</h1>
+
+  <div class="card">
+    <div class="card-body">
+      <h4>{{ current_user.name }}</h4>
+
+      <p>{{ current_user.email }}</p>
+
+      <p>
+        Account Type: {% if current_user.is_admin %} Admin {% else %} User {%
+        endif %}
+      </p>
+
+      <a href="{{ url_for('main.edit_profile') }}" class="btn btn-primary">
+        Edit Profile
+      </a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

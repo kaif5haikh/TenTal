@@ -11,6 +11,11 @@ from models.user import User
 from models.booking import Booking
 from datetime import datetime, date, timedelta
 from flask import flash
+from flask import current_app
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)
 
 
 BUFFER_DAYS = 1
@@ -59,9 +64,22 @@ def browse():
         ""
     )
 
-    rentals = RentalItem.query.filter_by(
+    page = request.args.get(
+        "page",
+        1,
+        type=int
+    )
+
+    pagination = RentalItem.query.filter_by(
         status="approved"
-    ).all()
+    ).paginate(
+        page=page,
+        per_page=6,
+        error_out=False
+    )
+
+    rentals = pagination.items
+
 
     rentals = [
         rental for rental in rentals
@@ -87,7 +105,8 @@ def browse():
     return render_template(
         "browse.html",
         rentals=rentals,
-        selected_category=category
+        selected_category=category,
+        pagination=pagination
     )
 
 
@@ -491,6 +510,24 @@ def edit_listing(id):
         rental.quantity = int(
             request.form["quantity"]
         )
+        image = request.files.get(
+        "image"
+        )
+
+        if image and image.filename:
+
+            filename = secure_filename(
+                image.filename
+            )
+
+            image.save(
+                os.path.join(
+                    current_app.config["UPLOAD_FOLDER"],
+                    filename
+                )
+            )
+
+            rental.image = filename
         db.session.commit()
 
         return redirect(
@@ -682,4 +719,61 @@ def owner_dashboard():
         completed_rentals=completed_rentals,
         total_revenue=total_revenue,
         recent_bookings=recent_bookings
+    )
+
+@main.route("/profile")
+@login_required
+def profile():
+
+    return render_template(
+        "profile.html"
+    )
+
+@main.route("/edit-profile", methods=["GET", "POST"])
+@login_required
+def edit_profile():
+
+    if request.method == "POST":
+
+        current_user.name = request.form["name"]
+
+        current_user.email = request.form["email"]
+
+        current_password = request.form.get(
+            "current_password"
+        )
+
+        new_password = request.form.get(
+            "new_password"
+        )
+
+        confirm_password = request.form.get(
+            "confirm_password"
+        )
+
+        if new_password:
+
+            if not check_password_hash(
+                current_user.password,
+                current_password
+            ):
+                return "Current password is incorrect"
+
+            if new_password != confirm_password:
+                return "Passwords do not match"
+
+            current_user.password = (
+                generate_password_hash(
+                    new_password
+                )
+            )
+
+        db.session.commit()
+
+        return redirect(
+            url_for("main.profile")
+        )
+
+    return render_template(
+        "edit_profile.html"
     )

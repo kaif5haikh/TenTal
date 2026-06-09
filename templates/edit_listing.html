@@ -3,7 +3,7 @@
 <div class="container mt-5">
   <h1>Edit Listing</h1>
 
-  <form method="POST">
+  <form method="POST" enctype="multipart/form-data">
     <div class="mb-3">
       <label>Title</label>
       <input
@@ -124,6 +124,43 @@
           Sports Equipment
         </option>
       </select>
+    </div>
+        <div class="mb-3">
+
+      <label>Current Image</label>
+
+      <br>
+
+      {% if rental.image %}
+
+        <img
+          src="{{ url_for('static',
+          filename='uploads/' + rental.image) }}"
+          width="200"
+          class="img-thumbnail mb-2"
+        >
+
+      {% else %}
+
+        <p class="text-muted">
+          No image uploaded
+        </p>
+
+      {% endif %}
+
+    </div>
+
+    <div class="mb-3">
+
+      <label>Change Image</label>
+
+      <input
+        type="file"
+        name="image"
+        class="form-control"
+        accept="image/*"
+      >
+
     </div>
 
     <button type="submit" class="btn btn-primary">Update Listing</button>
