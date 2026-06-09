@@ -52,12 +52,78 @@
 
     <div class="mb-3">
       <label>Category</label>
-      <input
-        type="text"
-        name="category"
-        class="form-control"
-        value="{{ rental.category }}"
-      />
+
+      <select name="category" class="form-select">
+        <option
+          value="Camping Gear"
+          {%
+          if
+          rental.category=="Camping Gear"
+          %}
+          selected
+          {%
+          endif
+          %}
+        >
+          Camping Gear
+        </option>
+
+        <option
+          value="Tents"
+          {%
+          if
+          rental.category =="Tents"
+          %}
+          selected
+          {%
+          endif
+          %}
+        >
+          Tents
+        </option>
+
+        <option
+          value="Photography"
+          {%
+          if
+          rental.category =="Photography"
+          %}
+          selected
+          {%
+          endif
+          %}
+        >
+          Photography
+        </option>
+
+        <option
+          value="Electronics"
+          {%
+          if
+          rental.category=="Electronics"
+          %}
+          selected
+          {%
+          endif
+          %}
+        >
+          Electronics
+        </option>
+
+        <option
+          value="Sports Equipment"
+          {%
+          if
+          rental.category=="Sports Equipment"
+          %}
+          selected
+          {%
+          endif
+          %}
+        >
+          Sports Equipment
+        </option>
+      </select>
     </div>
 
     <button type="submit" class="btn btn-primary">Update Listing</button>

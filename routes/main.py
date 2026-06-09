@@ -54,6 +54,10 @@ def browse():
         "search",
         ""
     )
+    category = request.args.get(
+        "category",
+        ""
+    )
 
     rentals = RentalItem.query.filter_by(
         status="approved"
@@ -72,10 +76,18 @@ def browse():
             if search.lower()
             in rental.title.lower()
         ]
+    if category:
+
+        rentals = [
+            rental
+            for rental in rentals
+            if rental.category == category
+        ]
 
     return render_template(
         "browse.html",
-        rentals=rentals
+        rentals=rentals,
+        selected_category=category
     )
 
 

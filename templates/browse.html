@@ -3,19 +3,11 @@
 <div id="browse-page" class="container mt-5">
   <h1 id="browse-title" class="mb-4">Browse Rentals</h1>
 
-  <div id="filter-section" class="row mb-4">
-    <div class="col-md-4">
-      <select id="category-filter" class="form-select">
-        <option selected>All Categories</option>
-        <option>Camping Gear</option>
-        <option>Electronics</option>
-        <option>Accommodation</option>
-      </select>
-    </div>
-  </div>
+<form method="GET" class="mb-4">
 
-  <form method="GET" class="mb-4">
-    <div class="input-group">
+  <div class="row">
+
+    <div class="col-md-6">
       <input
         type="text"
         name="search"
@@ -23,10 +15,60 @@
         placeholder="Search tents, stoves, bags..."
         value="{{ request.args.get('search', '') }}"
       />
-
-      <button type="submit" class="btn btn-primary">Search</button>
     </div>
-  </form>
+
+    <div class="col-md-4">
+
+      <select
+        name="category"
+        class="form-select"
+      >
+
+        <option value="">
+          All Categories
+        </option>
+
+        <option value="Camping Gear"
+          {% if selected_category == "Camping Gear" %}selected{% endif %}>
+          Camping Gear
+        </option>
+
+        <option value="Tents"
+          {% if selected_category == "Tents" %}selected{% endif %}>
+          Tents
+        </option>
+
+        <option value="Photography"
+          {% if selected_category == "Photography" %}selected{% endif %}>
+          Photography
+        </option>
+
+        <option value="Electronics"
+          {% if selected_category == "Electronics" %}selected{% endif %}>
+          Electronics
+        </option>
+
+        <option value="Sports Equipment"
+          {% if selected_category == "Sports Equipment" %}selected{% endif %}>
+          Sports Equipment
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="col-md-2">
+      <button
+        type="submit"
+        class="btn btn-primary w-100"
+      >
+        Search
+      </button>
+    </div>
+
+  </div>
+
+</form>
   <div id="rental-listings" class="row g-4">
     {% for rental in rentals %}
 
