@@ -3,21 +3,6 @@
 <div id="browse-page" class="container mt-5">
   <h1 id="browse-title" class="mb-4">Browse Rentals</h1>
 
-  <div id="search-section" class="row mb-4">
-    <div class="col-md-8">
-      <input
-        id="search-input"
-        type="text"
-        class="form-control"
-        placeholder="Search tents, backpacks, cameras..."
-      />
-    </div>
-
-    <div class="col-md-4">
-      <button id="search-button" class="btn btn-primary w-100">Search</button>
-    </div>
-  </div>
-
   <div id="filter-section" class="row mb-4">
     <div class="col-md-4">
       <select id="category-filter" class="form-select">
@@ -29,6 +14,19 @@
     </div>
   </div>
 
+  <form method="GET" class="mb-4">
+    <div class="input-group">
+      <input
+        type="text"
+        name="search"
+        class="form-control"
+        placeholder="Search tents, stoves, bags..."
+        value="{{ request.args.get('search', '') }}"
+      />
+
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
   <div id="rental-listings" class="row g-4">
     {% for rental in rentals %}
 

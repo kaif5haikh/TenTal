@@ -3,13 +3,86 @@
 <div class="container mt-5">
   <h1>Owner Dashboard</h1>
 
-  <div class="card p-3 mb-3">Total Listings: {{ total_listings }}</div>
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h2>{{ total_listings }}</h2>
+          <p class="mb-0">Total Listings</p>
+        </div>
+      </div>
+    </div>
 
-  <div class="card p-3 mb-3">Active Rentals: {{ active_rentals }}</div>
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h2>{{ active_rentals }}</h2>
+          <p class="mb-0">Active Rentals</p>
+        </div>
+      </div>
+    </div>
 
-  <div class="card p-3 mb-3">Completed Rentals: {{ completed_rentals }}</div>
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h2>{{ completed_rentals }}</h2>
+          <p class="mb-0">Completed Rentals</p>
+        </div>
+      </div>
+    </div>
 
-  <div class="card p-3 mb-3">Revenue Earned: ₹{{ total_revenue }}</div>
+    <div class="col-md-3">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h2>₹{{ total_revenue }}</h2>
+          <p class="mb-0">Revenue Earned</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr />
+
+  <h3 class="mt-4">Recent Bookings</h3>
+
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>User</th>
+        <th>Status</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for booking in recent_bookings %}
+
+      <tr>
+        <td>{{ booking.rental_item.title }}</td>
+
+        <td>{{ booking.user.name }}</td>
+
+        <td>
+          {% if booking.status == "completed" %}
+          <span class="badge bg-primary"> Completed </span>
+
+          {% elif booking.status == "active" %}
+          <span class="badge bg-success"> Active </span>
+
+          {% elif booking.status == "cancelled" %}
+          <span class="badge bg-danger"> Cancelled </span>
+
+          {% else %}
+          <span class="badge bg-warning text-dark"> {{ booking.status }} </span>
+          {% endif %}
+        </td>
+
+        <td>₹{{ booking.total_price + booking.security_deposit }}</td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
 {% endblock %}

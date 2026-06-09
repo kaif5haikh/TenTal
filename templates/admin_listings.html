@@ -32,6 +32,12 @@
         Reject
       </a>
     </div>
+    <a
+      href="{{ url_for('main.admin_listing_detail', id=rental.id) }}"
+      class="btn btn-info"
+    >
+      View Details
+    </a>
   </div>
 
   {% endfor %}

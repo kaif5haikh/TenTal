@@ -50,6 +50,11 @@ def home():
 @main.route("/browse")
 def browse():
 
+    search = request.args.get(
+        "search",
+        ""
+    )
+
     rentals = RentalItem.query.filter_by(
         status="approved"
     ).all()
@@ -58,6 +63,15 @@ def browse():
         rental for rental in rentals
         if rental.owner.is_active_user
     ]
+
+    if search:
+
+        rentals = [
+            rental
+            for rental in rentals
+            if search.lower()
+            in rental.title.lower()
+        ]
 
     return render_template(
         "browse.html",
@@ -143,6 +157,20 @@ def admin_listings():
     return render_template(
         "admin_listings.html",
         rentals=rentals
+    )
+
+@main.route("/admin/listing/<int:id>")
+@login_required
+def admin_listing_detail(id):
+
+    if not current_user.is_admin:
+        return "Access Denied"
+
+    rental = RentalItem.query.get_or_404(id)
+
+    return render_template(
+        "admin_listing_detail.html",
+        rental=rental
     )
 
 @main.route("/admin/dashboard")
@@ -405,6 +433,14 @@ def delete_listing(id):
     if rental.user_id != current_user.id:
         return "Access Denied"
 
+    has_booking = any(
+        booking.status != "cancelled"
+        for booking in rental.bookings
+    )
+
+    if has_booking:
+        return "Cannot delete listing because bookings exist"
+
     db.session.delete(rental)
     db.session.commit()
 
@@ -436,7 +472,13 @@ def edit_listing(id):
         rental.category = request.form.get(
             "category"
         )
+        rental.security_deposit = float(
+            request.form["security_deposit"]
+        )
 
+        rental.quantity = int(
+            request.form["quantity"]
+        )
         db.session.commit()
 
         return redirect(
@@ -476,13 +518,34 @@ def booking_requests():
         Booking.rental_item
     ).filter(
         RentalItem.user_id == current_user.id
+    ).order_by(
+        Booking.created_at.desc()
     ).all()
 
-    
+    total_requests = len(bookings)
+
+    active_count = sum(
+        1 for booking in bookings
+        if booking.status == "active"
+    )
+
+    completed_count = sum(
+        1 for booking in bookings
+        if booking.status == "completed"
+    )
+
+    cancelled_count = sum(
+        1 for booking in bookings
+        if booking.status == "cancelled"
+    )
 
     return render_template(
         "booking_requests.html",
-        bookings=bookings
+        bookings=bookings,
+        total_requests=total_requests,
+        active_count=active_count,
+        completed_count=completed_count,
+        cancelled_count=cancelled_count
     )
 
 
@@ -576,6 +639,18 @@ def owner_dashboard():
     active_rentals = 0
     completed_rentals = 0
     total_revenue = 0
+    recent_bookings = []
+
+    for listing in listings:
+        recent_bookings.extend(
+            listing.bookings
+        )
+
+    recent_bookings = sorted(
+        recent_bookings,
+        key=lambda booking: booking.created_at,
+        reverse=True
+    )[:5]
 
     for listing in listings:
 
@@ -593,5 +668,6 @@ def owner_dashboard():
         total_listings=total_listings,
         active_rentals=active_rentals,
         completed_rentals=completed_rentals,
-        total_revenue=total_revenue
+        total_revenue=total_revenue,
+        recent_bookings=recent_bookings
     )

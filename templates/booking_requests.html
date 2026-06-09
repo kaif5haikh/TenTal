@@ -2,7 +2,31 @@
 
 <div class="container mt-5">
   <h1>Booking Requests</h1>
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body">Total Requests: {{ total_requests }}</div>
+      </div>
+    </div>
 
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body">Active Rentals: {{ active_count }}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body">Completed Rentals: {{ completed_count }}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body">Cancelled Rentals: {{ cancelled_count }}</div>
+      </div>
+    </div>
+  </div>
   {% for booking in bookings %}
 
   <div class="card mb-3">
@@ -10,6 +34,10 @@
       <h4>{{ booking.rental_item.title }}</h4>
 
       <p>Requested By: {{ booking.user.name }}</p>
+      <p>Email: {{ booking.user.email }}</p>
+      <p>
+        Requested On: {{ booking.created_at.strftime('%d-%m-%Y %I:%M %p') }}
+      </p>
 
       <p>{{ booking.start_date }} → {{ booking.end_date }}</p>
 
@@ -21,7 +49,20 @@
 
       <p>Total Amount: ₹{{ booking.total_price + booking.security_deposit }}</p>
 
-      <p>Status: {{ booking.status }}</p>
+      <p>
+        Status: {% if booking.status == "active" %}
+        <span class="badge bg-success">Active</span>
+
+        {% elif booking.status == "completed" %}
+        <span class="badge bg-primary">Completed</span>
+
+        {% elif booking.status == "cancelled" %}
+        <span class="badge bg-danger">Cancelled</span>
+
+        {% else %}
+        <span class="badge bg-warning"> {{ booking.status }} </span>
+        {% endif %}
+      </p>
     </div>
   </div>
 

@@ -13,6 +13,16 @@
         value="{{ rental.title }}"
       />
     </div>
+    <label>Quantity</label>
+
+    <input
+      type="number"
+      name="quantity"
+      class="form-control mb-3"
+      value="{{ rental.quantity }}"
+      min="1"
+      required
+    />
 
     <div class="mb-3">
       <label>Description</label>
@@ -20,6 +30,15 @@
 {{ rental.description }}</textarea
       >
     </div>
+    <label>Security Deposit</label>
+
+    <input
+      type="number"
+      name="security_deposit"
+      class="form-control mb-3"
+      value="{{ rental.security_deposit }}"
+      required
+    />
 
     <div class="mb-3">
       <label>Price Per Day</label>

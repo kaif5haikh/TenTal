@@ -3,11 +3,20 @@
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-6">
+      {% if rental.image %}
       <img
         src="{{ url_for('static', filename='uploads/' + rental.image) }}"
         class="img-fluid rounded"
         style="height: 500px; width: 100%; object-fit: cover"
       />
+      {% else %}
+      <div
+        class="border rounded d-flex align-items-center justify-content-center"
+        style="height: 500px"
+      >
+        <h4 class="text-muted">No Image Available</h4>
+      </div>
+      {% endif %}
     </div>
 
     <div class="col-md-6">

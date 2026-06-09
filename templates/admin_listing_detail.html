@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-5">
+  <h1>{{ rental.title }}</h1>
+
+  {% if rental.image %}
+  <img
+    src="{{ url_for('static', filename='uploads/' + rental.image) }}"
+    class="img-fluid mb-3"
+    style="max-height: 400px"
+  />
+  {% endif %}
+
+  <p><strong>Description:</strong> {{ rental.description }}</p>
+
+  <p><strong>Category:</strong> {{ rental.category }}</p>
+
+  <p><strong>Price:</strong> ₹{{ rental.price_per_day }}/day</p>
+
+  <p><strong>Security Deposit:</strong> ₹{{ rental.security_deposit }}</p>
+
+  <p><strong>Quantity:</strong> {{ rental.quantity }}</p>
+
+  <p><strong>Owner:</strong> {{ rental.owner.name }}</p>
+
+  <p><strong>Email:</strong> {{ rental.owner.email }}</p>
+
+  <a
+    href="{{ url_for('main.approve_listing', id=rental.id) }}"
+    class="btn btn-success"
+  >
+    Approve
+  </a>
+
+  <a
+    href="{{ url_for('main.reject_listing', id=rental.id) }}"
+    class="btn btn-danger"
+  >
+    Reject
+  </a>
+</div>
+
+{% endblock %}
