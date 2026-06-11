@@ -33,7 +33,7 @@ def login():
             return redirect(url_for("main.home"))
         return "Invalid Email or Password"
 
-    return render_template("login.html")
+    return render_template("auth/login.html")
 
 @auth.route("/register", methods=["GET", "POST"])
 def register():
@@ -63,7 +63,7 @@ def register():
 
         return redirect(url_for("auth.login"))
 
-    return render_template("register.html")
+    return render_template("auth/register.html")
 
 @auth.route("/logout")
 def logout():

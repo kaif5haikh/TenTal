@@ -147,7 +147,7 @@ def listing_detail(id):
         )
 
     return render_template(
-        "listing_detail.html",
+        "listing/detail.html",
         rental=rental,
         booked_dates=booked_dates,
         reviews=reviews,
@@ -205,7 +205,7 @@ def create_listing():
         )
 
     return render_template(
-        "create_listing.html"
+        "listing/create.html"
     )
 
 @main.route("/admin/listings")
@@ -219,7 +219,7 @@ def admin_listings():
     ).all()
 
     return render_template(
-        "admin_listings.html",
+        "admin/listings.html",
         rentals=rentals
     )
 
@@ -233,7 +233,7 @@ def admin_listing_detail(id):
     rental = RentalItem.query.get_or_404(id)
 
     return render_template(
-        "admin_listing_detail.html",
+        "admin/listing_detail.html",
         rental=rental
     )
 
@@ -265,7 +265,7 @@ def admin_dashboard():
     ).limit(5).all()
 
     return render_template(
-        "admin_dashboard.html",
+        "admin/dashboard.html",
         total_users=total_users,
         total_listings=total_listings,
         pending_listings=pending_listings,
@@ -284,7 +284,7 @@ def admin_users():
     users = User.query.all()
 
     return render_template(
-        "admin_users.html",
+        "admin/users.html",
         users=users
     )
 
@@ -299,7 +299,7 @@ def user_listings(id):
     user = User.query.get_or_404(id)
 
     return render_template(
-        "user_listings.html",
+        "listing/user_listings.html",
         user=user
     )
 
@@ -484,7 +484,7 @@ def my_listings():
     rentals = current_user.rentals
 
     return render_template(
-        "my_listings.html",
+        "listing/my_listings.html",
         rentals=rentals
     )
 
@@ -568,7 +568,7 @@ def edit_listing(id):
         )
 
     return render_template(
-        "edit_listing.html",
+        "listing/edit.html",
         rental=rental
     )
 
@@ -588,7 +588,7 @@ def my_bookings():
     db.session.commit()
 
     return render_template(
-        "my_bookings.html",
+        "booking/my_bookings.html",
         bookings=bookings
     )
 
@@ -629,7 +629,7 @@ def booking_requests():
     )
 
     return render_template(
-        "booking_requests.html",
+        "booking/booking_requests.html",
         bookings=bookings,
         total_requests=total_requests,
         active_count=active_count,
@@ -766,7 +766,7 @@ def owner_dashboard():
 def profile():
 
     return render_template(
-        "profile.html"
+        "profile/profile.html"
     )
 
 @main.route("/edit-profile", methods=["GET", "POST"])
@@ -815,7 +815,7 @@ def edit_profile():
         )
 
     return render_template(
-        "edit_profile.html"
+        "profile/edit_profile.html"
     )
 
 
