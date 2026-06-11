@@ -36,9 +36,40 @@
         Cancel Booking
       </a>
 
+      {% endif %} {% if booking.status == "completed" %}
+
+      <form
+        method="POST"
+        action="{{ url_for('main.add_review', booking_id=booking.id) }}"
+        class="mt-3"
+      >
+        <label>Rating</label>
+
+        <select name="rating" class="form-select mb-2">
+          <option value="5">5 ⭐</option>
+          <option value="4">4 ⭐</option>
+          <option value="3">3 ⭐</option>
+          <option value="2">2 ⭐</option>
+          <option value="1">1 ⭐</option>
+        </select>
+
+        <textarea
+          name="comment"
+          class="form-control mb-2"
+          placeholder="Write your review..."
+          required
+        ></textarea>
+
+        <button type="submit" class="btn btn-success btn-sm">
+          Submit Review
+        </button>
+      </form>
+
       {% endif %}
 
-      <p>Requested: {{ booking.created_at.strftime('%d-%m-%Y %I:%M %p') }}</p>
+      <p class="mt-2">
+        Requested: {{ booking.created_at.strftime('%d-%m-%Y %I:%M %p') }}
+      </p>
     </div>
   </div>
 

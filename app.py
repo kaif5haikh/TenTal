@@ -2,13 +2,16 @@ from flask import Flask
 from dotenv import load_dotenv
 import os
 
-from models.user import User
-from models.rental_item import RentalItem
+
 
 from extensions import db, login_manager
 from routes.main import main
 from routes.auth import auth
+
+from models.user import User
+from models.rental_item import RentalItem
 from models.booking import Booking
+from models.review import Review
 
 # Load environment variables from .env file
 load_dotenv()

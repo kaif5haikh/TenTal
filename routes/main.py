@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, jsonify
 from flask_login import current_user
 from models.rental_item import RentalItem
 from extensions import db
@@ -16,6 +16,7 @@ from werkzeug.security import (
     generate_password_hash,
     check_password_hash
 )
+from models.review import Review
 
 
 BUFFER_DAYS = 1
@@ -116,11 +117,43 @@ def listing_detail(id):
 
     rental = RentalItem.query.get_or_404(id)
 
+    booked_dates = [
+        booking
+        for booking in rental.bookings
+        if booking.status in [
+            "approved",
+            "active"
+        ]
+    ]
+
+    reviews = Review.query.filter_by(
+        rental_item_id=rental.id
+    ).order_by(
+        Review.created_at.desc()
+    ).all()
+
+    review_count = len(reviews)
+
+    average_rating = 0
+
+    if review_count > 0:
+
+        average_rating = round(
+            sum(
+                review.rating
+                for review in reviews
+            ) / review_count,
+            1
+        )
 
     return render_template(
         "listing_detail.html",
-        rental=rental
-    )   
+        rental=rental,
+        booked_dates=booked_dates,
+        reviews=reviews,
+        average_rating=average_rating,
+        review_count=review_count
+    )
 
 @main.route("/create-listing", methods=["GET", "POST"])
 @login_required
@@ -571,6 +604,13 @@ def booking_requests():
         Booking.created_at.desc()
     ).all()
 
+    for booking in bookings:
+        update_booking_status(
+            booking
+        )
+
+    db.session.commit()
+
     total_requests = len(bookings)
 
     active_count = sum(
@@ -776,4 +816,41 @@ def edit_profile():
 
     return render_template(
         "edit_profile.html"
+    )
+
+
+@main.route("/review/<int:booking_id>", methods=["POST"])
+@login_required
+def add_review(booking_id):
+
+    booking = Booking.query.get_or_404(
+        booking_id
+    )
+
+    if booking.user_id != current_user.id:
+        return "Access Denied"
+
+    if booking.status != "completed":
+        return "Only completed bookings can be reviewed"
+
+    existing_review = Review.query.filter_by(
+        booking_id=booking.id
+    ).first()
+
+    if existing_review:
+        return "Review already submitted"
+
+    review = Review(
+        user_id=current_user.id,
+        rental_item_id=booking.rental_item_id,
+        booking_id=booking.id,
+        rating=int(request.form["rating"]),
+        comment=request.form["comment"]
+    )
+
+    db.session.add(review)
+    db.session.commit()
+
+    return redirect(
+        url_for("main.my_bookings")
     )

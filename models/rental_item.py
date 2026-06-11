@@ -42,3 +42,9 @@ class RentalItem(db.Model):
         nullable=False,
         default=0
     )
+    reviews = db.relationship(
+        "Review",
+        backref="rental_item",
+        lazy=True,
+        cascade="all, delete-orphan"
+    )

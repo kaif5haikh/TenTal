@@ -54,3 +54,8 @@ class Booking(db.Model):
         nullable=False,
         default=0
     )
+    review = db.relationship(
+        "Review",
+        backref="booking",
+        uselist=False
+    )

@@ -34,7 +34,7 @@ class User(UserMixin, db.Model):
 
     is_admin = db.Column(
         db.Boolean,
-        default=False
+        default=True
     )
     is_active_user = db.Column(
         db.Boolean,
@@ -43,6 +43,11 @@ class User(UserMixin, db.Model):
 
     bookings = db.relationship(
         "Booking",
+        backref="user",
+        lazy=True
+    )
+    reviews = db.relationship(
+        "Review",
         backref="user",
         lazy=True
     )
