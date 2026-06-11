@@ -854,3 +854,49 @@ def add_review(booking_id):
     return redirect(
         url_for("main.my_bookings")
     )
+
+@main.route("/analytics")
+@login_required
+def analytics():
+
+    listings = RentalItem.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    total_listings = len(listings)
+
+    listing_ids = [
+        listing.id
+        for listing in listings
+    ]
+
+    bookings = Booking.query.filter(
+        Booking.rental_item_id.in_(listing_ids)
+    ).all()
+
+    total_bookings = len(bookings)
+
+    active_rentals = sum(
+        1 for booking in bookings
+        if booking.status == "active"
+    )
+
+    completed_rentals = sum(
+        1 for booking in bookings
+        if booking.status == "completed"
+    )
+
+    total_revenue = sum(
+        booking.total_price
+        for booking in bookings
+        if booking.status == "completed"
+    )
+
+    return render_template(
+        "analytics.html",
+        total_listings=total_listings,
+        total_bookings=total_bookings,
+        active_rentals=active_rentals,
+        completed_rentals=completed_rentals,
+        total_revenue=total_revenue
+    )

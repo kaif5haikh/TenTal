@@ -1,0 +1,53 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-5">
+  <h1 class="mb-4">Analytics Dashboard</h1>
+
+  <div class="row">
+    <div class="col-md-3 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5>Total Listings</h5>
+          <h2>{{ total_listings }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5>Total Bookings</h5>
+          <h2>{{ total_bookings }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5>Active Rentals</h5>
+          <h2>{{ active_rentals }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5>Completed Rentals</h5>
+          <h2>{{ completed_rentals }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-4">
+    <div class="card-body">
+      <h4>Total Revenue Earned</h4>
+
+      <h2 class="text-success">₹{{ total_revenue }}</h2>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

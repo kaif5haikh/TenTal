@@ -2,8 +2,6 @@ from flask import Flask
 from dotenv import load_dotenv
 import os
 
-
-
 from extensions import db, login_manager
 from routes.main import main
 from routes.auth import auth
