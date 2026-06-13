@@ -436,6 +436,18 @@ def request_booking(id):
     if quantity_booked > available_quantity:
         return f"Only {available_quantity} item(s) available for selected dates"
 
+    phone_number = request.form.get(
+        "phone_number"
+    )
+
+    delivery_address = request.form.get(
+        "delivery_address"
+    )
+
+    special_instructions = request.form.get(
+        "special_instructions"
+    )
+
     booking = Booking(
         user_id=current_user.id,
         rental_item_id=rental.id,
@@ -444,7 +456,10 @@ def request_booking(id):
         total_price=total_price,
         security_deposit=rental.security_deposit,
         quantity_booked=quantity_booked,
-        status="approved"
+        status="approved",
+        phone_number=phone_number,
+        delivery_address=delivery_address,
+        special_instructions=special_instructions,
     )
 
     db.session.add(booking)
@@ -892,11 +907,108 @@ def analytics():
         if booking.status == "completed"
     )
 
+
+    owner_reviews = Review.query.join(
+        RentalItem
+    ).filter(
+        RentalItem.user_id == current_user.id
+    ).all()
+
+    total_reviews = len(owner_reviews)
+
+    if total_reviews > 0:
+
+        average_rating = round(
+            sum(
+                review.rating
+                for review in owner_reviews
+            ) / total_reviews,
+            1
+        )
+
+    else:
+
+        average_rating = 0
+    
+    recent_bookings = Booking.query.join(
+        Booking.rental_item
+    ).filter(
+        RentalItem.user_id == current_user.id
+    ).order_by(
+        Booking.created_at.desc()
+    ).limit(5).all()
+
+    top_listings = []
+
+    for rental in listings:
+
+        booking_count = len(
+            rental.bookings
+        )
+
+        top_listings.append(
+            (
+                rental,
+                booking_count
+            )
+        )
+
+    top_listings.sort(
+        key=lambda item: item[1],
+        reverse=True
+    )
+
     return render_template(
         "analytics.html",
+
         total_listings=total_listings,
         total_bookings=total_bookings,
         active_rentals=active_rentals,
         completed_rentals=completed_rentals,
-        total_revenue=total_revenue
+        total_revenue=total_revenue,
+
+        average_rating=average_rating,
+        total_reviews=total_reviews,
+
+        recent_bookings=recent_bookings,
+        top_listings=top_listings
+    )
+
+@main.route(
+    "/delivery-status/<int:id>/<string:status>"
+)
+@login_required
+def update_delivery_status(
+    id,
+    status
+):
+
+    booking = Booking.query.get_or_404(id)
+
+    if booking.rental_item.user_id != current_user.id:
+        return "Access Denied"
+
+    valid_statuses = [
+        "pending",
+        "out_for_delivery",
+        "delivered",
+        "return_pending",
+        "returned"
+    ]
+
+    if status not in valid_statuses:
+        return "Invalid Status"
+
+    booking.delivery_status = status
+
+    if status == "returned":
+
+        booking.status = "completed"
+
+    db.session.commit()
+
+    return redirect(
+        url_for(
+            "main.booking_requests"
+        )
     )

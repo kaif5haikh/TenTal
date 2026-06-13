@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 
 from extensions import db, login_manager
+from flask_migrate import Migrate
 from routes.main import main
 from routes.auth import auth
 
@@ -25,6 +26,8 @@ app.config["UPLOAD_FOLDER"] = "static/uploads"
 
 # Attach SQLAlchemy database instance to Flask app
 db.init_app(app)
+
+migrate = Migrate(app, db)
 
 # Initialize Flask-Login for user session management
 login_manager.init_app(app)

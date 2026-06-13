@@ -34,7 +34,7 @@ class User(UserMixin, db.Model):
 
     is_admin = db.Column(
         db.Boolean,
-        default=True
+        default=False
     )
     is_active_user = db.Column(
         db.Boolean,

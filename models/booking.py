@@ -26,6 +26,11 @@ class Booking(db.Model):
         db.String(20),
         default="pending"
     )
+    delivery_status = db.Column(
+        db.String(30),
+        nullable=False,
+        default="pending"   
+    )
     start_date = db.Column(
         db.Date,
         nullable=False
@@ -59,3 +64,20 @@ class Booking(db.Model):
         backref="booking",
         uselist=False
     )
+
+    delivery_address = db.Column(
+        db.Text,
+        nullable=True
+    )
+
+    phone_number = db.Column(
+        db.String(20),
+        nullable=True
+    )
+
+    special_instructions = db.Column(
+        db.Text,
+        nullable=True
+    )
+    
+    

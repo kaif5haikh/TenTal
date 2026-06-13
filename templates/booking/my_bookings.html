@@ -8,6 +8,10 @@
   <div class="card mb-3">
     <div class="card-body">
       <h4>{{ booking.rental_item.title }}</h4>
+      <p>
+        <strong>Booking ID:</strong>
+        #{{ booking.id }}
+      </p>
 
       <p>{{ booking.start_date }} → {{ booking.end_date }}</p>
 
@@ -26,6 +30,40 @@
         Status:
         <span class="badge bg-warning"> {{ booking.status }} </span>
       </p>
+      <hr />
+
+      <h6>Delivery Tracking</h6>
+
+      <ul class="list-group mb-3">
+        <li
+          class="list-group-item {% if booking.delivery_status in [ 'out_for_delivery', 'delivered', 'return_pending', 'returned' ] %} list-group-item-success {% endif %}"
+        >
+          {% if booking.delivery_status in [ 'out_for_delivery', 'delivered',
+          'return_pending', 'returned' ] %} ✓ {% else %} ○ {% endif %} Out For
+          Delivery
+        </li>
+
+        <li
+          class="list-group-item {% if booking.delivery_status in [ 'delivered', 'return_pending', 'returned' ] %} list-group-item-success {% endif %}"
+        >
+          {% if booking.delivery_status in [ 'delivered', 'return_pending',
+          'returned' ] %} ✓ {% else %} ○ {% endif %} Delivered
+        </li>
+
+        <li
+          class="list-group-item {% if booking.delivery_status in [ 'return_pending', 'returned' ] %} list-group-item-success {% endif %}"
+        >
+          {% if booking.delivery_status in [ 'return_pending', 'returned' ] %} ✓
+          {% else %} ○ {% endif %} Return Pending
+        </li>
+
+        <li
+          class="list-group-item {% if booking.delivery_status == 'returned' %} list-group-item-success {% endif %}"
+        >
+          {% if booking.delivery_status == 'returned' %} ✓ {% else %} ○ {% endif
+          %} Returned
+        </li>
+      </ul>
 
       {% if booking.status == "approved" %}
 
