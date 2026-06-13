@@ -11,6 +11,7 @@ from models.user import User
 from models.rental_item import RentalItem
 from models.booking import Booking
 from models.review import Review
+from models.payment import Payment
 
 # Load environment variables from .env file
 load_dotenv()
@@ -38,8 +39,7 @@ login_manager.login_view = "auth.login"
 app.register_blueprint(main)
 app.register_blueprint(auth)
 
-with app.app_context():
-    db.create_all()
+
 
 if __name__ == "__main__":
     app.run(debug=True)
