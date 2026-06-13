@@ -20,7 +20,7 @@ class Payment(db.Model):
     )
 
     amount = db.Column(
-        db.Float,
+        db.Numeric(10, 2),
         nullable=False
     )
 
@@ -57,4 +57,9 @@ class Payment(db.Model):
     created_at = db.Column(
         db.DateTime,
         default=lambda: datetime.now(UTC)
+    )
+
+    user = db.relationship(
+        "User",
+        backref="payments"
     )

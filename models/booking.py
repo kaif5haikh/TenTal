@@ -65,6 +65,12 @@ class Booking(db.Model):
         uselist=False
     )
 
+    payment = db.relationship(
+        "Payment",
+        backref="booking",
+        uselist=False
+    )
+
     delivery_address = db.Column(
         db.Text,
         nullable=True
